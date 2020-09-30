@@ -22,8 +22,10 @@
 #include "Utils.h"
 
 #define kDateRecognitionAttempts  5
+#define kNumberRecognitionAttempts  30
 
 static int dateRecognitionAttemptsCount = 0;
+static int numberRecognitionAttemptsCount = 0;
 
 bool IRecognitionCore::GetInstance(shared_ptr<IRecognitionCore> &recognitionCore,
                                    const shared_ptr<IRecognitionCoreDelegate>& recognitionDelegate,
@@ -340,7 +342,8 @@ void CRecognitionCore::Recognize()
         
         // number
         if (_mode&PayCardsRecognizerModeNumber &&
-            !(recognitionResult->GetRecognitionStatus()&RecognitionStatusNumber)) {
+            !(recognitionResult->GetRecognitionStatus()&RecognitionStatusNumber) &&
+            numberRecognitionAttemptsCount < kNumberRecognitionAttempts) {
             if (!RecognizeNumber()) {
                 FinishRecognition();
                 return;
@@ -357,6 +360,15 @@ void CRecognitionCore::Recognize()
             }
         }
         
+        // name
+        if (_mode&PayCardsRecognizerModeName &&
+            !(recognitionResult->GetRecognitionStatus() & RecognitionStatusName)) {
+            if (!RecognizeName()) {
+                FinishRecognition();
+                return;
+            }
+        }
+        
         if (_mode&PayCardsRecognizerModeDate || _mode&PayCardsRecognizerModeNumber) {
             _delegate->RecognitionDidFinish(recognitionResult, (PayCardsRecognizerMode)(PayCardsRecognizerModeNumber|PayCardsRecognizerModeDate));
 
@@ -367,18 +379,13 @@ void CRecognitionCore::Recognize()
                 }
             }
         }
-
-        // name
-        if (_mode&PayCardsRecognizerModeName &&
-            !(recognitionResult->GetRecognitionStatus() & RecognitionStatusName)) {
-            RecognizeName();
-        }
         
         _delegate->RecognitionDidFinish(recognitionResult, PayCardsRecognizerModeName);
 
         _isIdle.store(true);
         FinishRecognition();
         dateRecognitionAttemptsCount = 0;
+        numberRecognitionAttemptsCount = 0;
         SetTorchStatus(false);
     }
 }
@@ -419,6 +426,8 @@ bool CRecognitionCore::RecognizeNumber()
                 Mat frame;
                 frameStorage->GetCurrentFrame(frame);
                 result = numberRecognizer->Process(frame, boundingRect);
+                
+                numberRecognitionAttemptsCount++;
                 if(result) {
                     recognitionResult->SetNumberResult(result);
                     recognitionResult->SetNumberRect(boundingRect);
