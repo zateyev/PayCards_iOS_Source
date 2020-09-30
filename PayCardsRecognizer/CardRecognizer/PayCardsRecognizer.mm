@@ -595,12 +595,12 @@ using namespace std;
     
     NSDictionary *attributes = @{NSFontAttributeName: [UIFont systemFontOfSize:10], NSForegroundColorAttributeName: [UIColor colorWithWhite:1 alpha:0.5], NSUnderlineStyleAttributeName: @(NSUnderlineStyleSingle)};
     
-    NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Powered by pay.cards", "") attributes:attributes];
+    NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"AIX Connect", "") attributes:attributes];
     
     _copyrightButton = [UIButton buttonWithType:UIButtonTypeSystem];
     _copyrightButton.translatesAutoresizingMaskIntoConstraints = NO;
     [_copyrightButton setAttributedTitle:attributedTitle forState:UIControlStateNormal];
-    [_copyrightButton addTarget:self action:@selector(tapCopyright) forControlEvents:UIControlEventTouchUpInside];
+//    [_copyrightButton addTarget:self action:@selector(tapCopyright) forControlEvents:UIControlEventTouchUpInside];
     
     return _copyrightButton;
 }
