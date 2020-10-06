@@ -63,10 +63,10 @@ extension RecognizerViewController {
 // MARK: - PayCardsRecognizerPlatformDelegate
 extension RecognizerViewController: PayCardsRecognizerPlatformDelegate {
     func payCardsRecognizer(_ payCardsRecognizer: PayCardsRecognizer, didRecognize result: PayCardsRecognizerResult) {
-        #if DEBUG
-            print(result)
-            print(result.dictionary as NSDictionary)
-        #endif
+//        #if DEBUG
+//            print(result)
+//            print(result.dictionary as NSDictionary)
+//        #endif
         
         if result.isCompleted {
             performSegue(withIdentifier: "CardDetailsViewController", sender: result)
