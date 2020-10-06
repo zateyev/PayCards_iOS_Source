@@ -22,7 +22,7 @@
 #include "Utils.h"
 
 #define kDateRecognitionAttempts  5
-#define kNumberRecognitionAttempts  30
+#define kNumberRecognitionAttempts  20
 
 static int dateRecognitionAttemptsCount = 0;
 static int numberRecognitionAttemptsCount = 0;
@@ -369,8 +369,8 @@ void CRecognitionCore::Recognize()
             }
         }
         
-        if (_mode&PayCardsRecognizerModeDate || _mode&PayCardsRecognizerModeNumber) {
-            _delegate->RecognitionDidFinish(recognitionResult, (PayCardsRecognizerMode)(PayCardsRecognizerModeNumber|PayCardsRecognizerModeDate));
+        if (_mode&PayCardsRecognizerModeDate || _mode&PayCardsRecognizerModeNumber || _mode&PayCardsRecognizerModeName) {
+            _delegate->RecognitionDidFinish(recognitionResult, (PayCardsRecognizerMode)(PayCardsRecognizerModeNumber|PayCardsRecognizerModeDate|PayCardsRecognizerModeName));
 
             if(_mode&PayCardsRecognizerModeGrabCardImage) {
                 auto cardMat = CaptureView();
@@ -380,8 +380,6 @@ void CRecognitionCore::Recognize()
             }
         }
         
-        _delegate->RecognitionDidFinish(recognitionResult, PayCardsRecognizerModeName);
-
         _isIdle.store(true);
         FinishRecognition();
         dateRecognitionAttemptsCount = 0;
