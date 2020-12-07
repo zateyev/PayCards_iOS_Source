@@ -21,8 +21,8 @@
 
 #include "Utils.h"
 
-#define kDateRecognitionAttempts  5
-#define kNumberRecognitionAttempts  20
+#define kDateRecognitionAttempts  1
+#define kNumberRecognitionAttempts  1
 
 static int dateRecognitionAttemptsCount = 0;
 static int numberRecognitionAttemptsCount = 0;
